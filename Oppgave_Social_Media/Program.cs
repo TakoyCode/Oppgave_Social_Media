@@ -1,4 +1,6 @@
-﻿namespace Oppgave_Social_Media
+﻿using System.Data;
+
+namespace Oppgave_Social_Media
 {
     internal class Program
     {
@@ -60,19 +62,27 @@
 
             void RemoveFriendMenu()
             {
+                Console.Clear();
                 mySystem.CurrentUser.ShowFriends();
-                var userinput = Console.ReadLine();
-                var oldFriend = mySystem.CurrentUser.ReturnFriendByName(userinput);
-                if(mySystem.CurrentUser.RemoveFriend(oldFriend))
+                if (mySystem.CurrentUser.Friends.Count > 0)
                 {
-                    Console.WriteLine($"{oldFriend.Name} har blitt slettet fra din venneliste.");
-                    Thread.Sleep(500);
+                    Console.WriteLine("Skriv inn navnet til brukeren du har lyst til å fjerne som venn.");
+                    Console.WriteLine("Eller skriv X for å gå tilbake."); 
+                    var userInput = Console.ReadLine();
+                    if (userInput is "x" or "X") return;
+                    var oldFriend = mySystem.CurrentUser.ReturnFriendByName(userInput);
+                    if(mySystem.CurrentUser.RemoveFriend(oldFriend))
+                    {
+                        Console.WriteLine($"{oldFriend.Name} har blitt slettet fra din venneliste.");
+                        Thread.Sleep(1000);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{userInput} finnes ikke i din venneliste, vennligst prøve noe annet.");
+                        Thread.Sleep(1000);
+                        RemoveFriendMenu();
+                    }
                 }
-                else
-                {
-                    Console.WriteLine($"{userinput} finnes ikke i din venneliste, vennligst prøve noe annet.");
-                }
-                
             }
 
             void GetFriendMenu()
@@ -83,13 +93,18 @@
                 var userInput = Console.ReadLine();
                 if (userInput is "x" or "X") return;
                 var newFriend = mySystem.GetUserFromName(userInput);
-                if (newFriend != null)
+                if (newFriend == null)
+                {
+                    Console.Clear();
+                    mySystem.GetUsers();
+                    GetFriendMenu();
+                }
+                else
                 {
                     CurrentUser.AddFriend(newFriend);
                     Console.WriteLine($"La til {newFriend.Name}, til vennelista!");
                     Thread.Sleep(1000);
                 }
-                else mySystem.GetUsers();
             }
         }
 
