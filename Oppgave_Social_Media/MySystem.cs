@@ -24,23 +24,10 @@
             Console.Clear();
             foreach (var user in AllUsers)
             {
-                if(CurrentUser == user || CurrentUser.SearchFriendsByName(user.Name) == user) continue;
+                if(CurrentUser == user || CurrentUser.ReturnFriendByName(user.Name) == user) continue;
                 Console.WriteLine($"Navn:{user.Name} \tAlder:{user.Age} \tKjønn: {user.Sex} \tLand: {user.Country}");
                 Console.WriteLine();
             }
-
-            Console.WriteLine("Skriv inn navnet til en bruker hvis du har lyst til å legge dem til som venn.");
-            Console.WriteLine("Eller skriv X for å gå tilbake.");
-            var userInput = Console.ReadLine();
-            if(userInput is "x" or "X") return;
-            var newFriend = GetUserFromName(userInput);
-            if (newFriend != null)
-            {
-                CurrentUser.AddFriend(newFriend);
-                Console.WriteLine($"La til {newFriend.Name}, til vennelista!");
-                Thread.Sleep(1000);
-            }
-            else GetUsers();
 
         }
 

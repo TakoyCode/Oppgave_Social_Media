@@ -26,12 +26,9 @@
             _friends.Add(user);
         }
 
-        public void RemoveFriend(User user)
+        public bool RemoveFriend(User user)
         {
-            foreach (User friend in _friends)
-            {
-                if (friend == user) _friends.Remove(friend);
-            }
+            return _friends.Remove(user);
         }
 
         public void ShowProfile()
@@ -56,12 +53,6 @@
                 {
                     Console.WriteLine($"Navn:{friend.Name} \tAlder:{friend.Age} \tKjønn: {friend.Sex} \tLand: {friend.Country}");
                 }
-                Console.WriteLine("Skriv inn navnet til en venn for mer info eller skriv X for å gå tilbake");
-                var userinput = Console.ReadLine();
-                if(userinput == "x" || userinput == "X")return;
-
-                var friendObj = SearchFriendsByName(userinput);
-                if (friendObj != null){friendObj.ShowProfile();}
             }
             else
             {
@@ -69,14 +60,33 @@
                 Console.Write("\nPress en knapp for å gå tilbake");
                 Console.ReadKey(true);
             }
-            
         }
 
-        public User SearchFriendsByName(string userName)
+        public void ShowFriendProfile()
+        {
+            if (_friends.Count > 0)
+            { 
+                Console.WriteLine("Skriv inn navnet til en venn for mer info eller skriv X for å gå tilbake");
+                var userinput = Console.ReadLine();
+                if(userinput == "x" || userinput == "X")return;
+
+                var friendObj = ReturnFriendByName(userinput);
+                if (friendObj != null)
+                {
+                    friendObj.ShowProfile();
+                }
+                else
+                {
+                    
+                }
+            }
+        }
+
+        public User ReturnFriendByName(string userName)
         {
             foreach (var friend in _friends)
             {
-                if (friend.Name == userName) return friend;
+                if (friend.Name.ToLower() == userName.ToLower()) return friend;
             }
 
             return null;
